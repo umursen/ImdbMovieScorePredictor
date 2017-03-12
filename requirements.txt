@@ -6,6 +6,7 @@ cffi==1.9.1
 constantly==15.1.0
 cryptography==1.8.1
 cssselect==1.0.1
+Django==1.10
 enum34==1.1.6
 idna==2.5
 IMDbPY==5.1
