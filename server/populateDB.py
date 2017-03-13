@@ -23,7 +23,7 @@ def populateDjangoDB(data, movieLimit=500, castLimit=10):
     savedMovies=0
 
     for i in range(movieLimit):
-        i = 3
+        
         currentMovie = data[i]
         basicMovieInfo = ia.search_movie(currentMovie['name'])
         movieInfo = ia.get_movie(basicMovieInfo[0].movieID)
@@ -42,7 +42,7 @@ def populateDjangoDB(data, movieLimit=500, castLimit=10):
             movie.director = Person.objects.get_or_create(name = movieInfo['director'][0]['name'].encode('utf-8').strip())[0]
             movie.rating = movieInfo['rating']
             movie.year = movieInfo['year']
-            
+
             for n in range(castLimit):
                 movie.casting.add(Person.objects.get_or_create(name=movieInfo['cast'][n]['name'].encode('utf-8').strip())[0])
 
