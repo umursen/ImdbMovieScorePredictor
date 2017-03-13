@@ -40,8 +40,10 @@ def populateDjangoDB(data, movieLimit=500, castLimit=10):
 
             movie.writer = Person.objects.get_or_create(name = movieInfo['writer'][0]['name'].encode('utf-8').strip())[0]
             movie.director = Person.objects.get_or_create(name = movieInfo['director'][0]['name'].encode('utf-8').strip())[0]
-            movie.rating = movieInfo['rating']
             movie.year = movieInfo['year']
+
+            if 'rating' in movieInfo.keys():
+                movie.rating = movieInfo['rating']
 
             for n in range(castLimit):
                 movie.casting.add(Person.objects.get_or_create(name=movieInfo['cast'][n]['name'].encode('utf-8').strip())[0])
