@@ -2,17 +2,17 @@ from django.db import models
 
 
 class Person(models.Model):
-    name = models.CharField(max_length=64, unique=True)
+    name = models.CharField(max_length=64, primary_key=True)
 
     def __str__(self):
-        return self.name
+        return self.name.encode('utf8')
 
 
 class Genre(models.Model):
     name = models.CharField(max_length=32, unique=True)
 
     def __str__(self):
-        return self.name
+        return self.name.encode('utf8')
 
 class Movie(models.Model):
     name = models.CharField(max_length=128, unique=True)
@@ -29,4 +29,4 @@ class Movie(models.Model):
     genre = models.ManyToManyField(Genre, blank=True)
 
     def __str__(self):
-        return self.name
+        return self.name.encode('utf8')

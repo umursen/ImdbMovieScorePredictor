@@ -35,8 +35,8 @@ def populateDjangoDB(data, movieLimit=500, castLimit=10):
             worldwide_gross=sub(r'[^\d.]', '', currentMovie['worldwide_gross']),
             )
 
-            movie.writer = Person.objects.get_or_create(name = movieInfo['writer'][0]['name'].encode('utf-8').strip())[0]
-            movie.director = Person.objects.get_or_create(name = movieInfo['director'][0]['name'].encode('utf-8').strip())[0]
+            movie.writer = Person.objects.get_or_create(name = movieInfo['writer'][0]['name'].encode('utf8'))[0]
+            movie.director = Person.objects.get_or_create(name = movieInfo['director'][0]['name'].encode('utf8'))[0]
             movie.year = movieInfo['year']
 
             if 'rating' in movieInfo.keys():
@@ -44,15 +44,18 @@ def populateDjangoDB(data, movieLimit=500, castLimit=10):
 
             for n in range(castLimit):
                 if n < len(movieInfo['cast']):
-                    movie.casting.add(Person.objects.get_or_create(name=movieInfo['cast'][n]['name'].encode('utf-8').strip())[0])
+                    movie.casting.add(Person.objects.get_or_create(name=movieInfo['cast'][n]['name'].encode('utf8'))[0])
 
             for genre in movieInfo['genre']:
-                movie.genre.add(Genre.objects.get_or_create(name=genre.encode('utf-8').strip())[0])
+                movie.genre.add(Genre.objects.get_or_create(name=genre.encode('utf8'))[0])
 
             movie.save()
 
             savedMovies = savedMovies + 1
-            print('Movie ' + movie.name + ' is saved!')
+
+            print(str(i) + '-) Movie ' + movie.name + ' is saved!')
+        else:
+            print(str(i) + '-) Error: Couldnt find the movie. Instead, we have ' + currentMovie['name'].encode('utf-8').strip())
 
     print(str(savedMovies) + ' movies saved out of ' + str(i))
 
