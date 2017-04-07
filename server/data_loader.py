@@ -11,7 +11,7 @@ django.setup()
 
 from api.models import *
 import numpy as np
-
+from sklearn.preprocessing import OneHotEncoder, LabelEncoder, StandardScaler
 
 class DataLoader:
 
@@ -32,7 +32,7 @@ class DataLoader:
             if not basic_movie_info:
                 continue
 
-            movie_ = ia.get_movie(basic_movie_info[0].movieID)
+            movie_info = ia.get_movie(basic_movie_info[0].movieID)
 
             if not set(['cast','writer','genres','director','rating']).issubset(set(movie_info.keys())):
                 print('Passed one!')
@@ -73,20 +73,49 @@ class DataLoader:
 
 
     def load_dataset(self,movie_amount=5000):
-        actor_size = len(Actor.objects.all())
-        X = np.empty([1,actor_size+3], dtype=int)
+
+        actor_amount = len(Actor.objects.all())
+        writer_amount = len(Writer.objects.all())
+        director_amount = len(Director.objects.all())
+        genre_amount = len(Genre.objects.all())
+
+        array_length = actor_amount + writer_amount + director_amount + genre_amount + 1
+
+        X = np.empty([1,array_length], dtype=int)
         y = np.array([], dtype=float)
+
         movies = Movie.objects.all()
 
+        print('\nCurrently using '+str(len(movies))+' movies for dataset\n')
+        print('--Features--\nNumber of Features: 4\nNumber of Actors: '+ str(actor_amount)+'\nNumber of Directors: '+ str(director_amount)+'\nNumber of Writers: '+ str(writer_amount))
+
         for movie in movies:
-            m = np.zeros(actor_size+3, dtype=int)
-            for actor in movie.casting.all():
-                m[actor.pk+2] = 1
+            m = np.zeros(array_length, dtype=int)
+
             m[0] = int(str(movie.release_date)[(len(movie.release_date)-4):])
-            m[1] = movie.writer.pk
-            m[2] = movie.director.pk
+
+            actor_priority=1
+            actor_number = len(movie.casting.all())
+            for actor in movie.casting.all():
+                actor_number
+                m[actor.pk] = actor_priority
+
+            for genre in movie.genre.all():
+                m[actor_amount+genre.pk] = 1
+
+            m[actor_amount+genre_amount+movie.writer.pk] = 1
+            m[actor_amount+genre_amount+writer_amount+movie.director.pk] = 1
+
+            # m[len(m)-1]=movie.production_budget
+
             X = np.append(X, [m], axis=0)
             y = np.append(y, movie.rating)
-            print(movie.pk)
         X = X[1:]
+
+        labelencoder_X_year = LabelEncoder()
+        X[:,0] = labelencoder_X_year.fit_transform(X[:,0])
+        oneHotEncoder = OneHotEncoder(categorical_features=[0])
+        X = oneHotEncoder.fit_transform(X).toarray()
+        # X = StandardScaler().transform(X)
+
         return X,y
