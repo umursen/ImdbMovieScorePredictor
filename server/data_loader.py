@@ -72,7 +72,7 @@ class DataLoader:
         print(str(saved_movies) + ' movies saved out of ' + str(i))
 
 
-    def load_dataset(self,movie_amount=5000):
+    def load_dataset(self,movie_amount=5000,test_cases=[]):
 
         actor_amount = len(Actor.objects.all())
         writer_amount = len(Writer.objects.all())
@@ -87,7 +87,7 @@ class DataLoader:
         movies = Movie.objects.all()
 
         print('\nCurrently using '+str(len(movies))+' movies for dataset\n')
-        print('--Features--\nNumber of Features: 4\nNumber of Actors: '+ str(actor_amount)+'\nNumber of Directors: '+ str(director_amount)+'\nNumber of Writers: '+ str(writer_amount))
+        print('--Features--\nNumber of Features: 4\nNumber of Actors: '+ str(actor_amount)+'\nNumber of Directors: '+ str(director_amount)+'\nNumber of Writers: '+ str(writer_amount)+'\n')
 
         for movie in movies:
             m = np.zeros(array_length, dtype=int)
@@ -97,7 +97,6 @@ class DataLoader:
             actor_priority=1
             actor_number = len(movie.casting.all())
             for actor in movie.casting.all():
-                actor_number
                 m[actor.pk] = actor_priority
 
             for genre in movie.genre.all():
@@ -111,6 +110,9 @@ class DataLoader:
             X = np.append(X, [m], axis=0)
             y = np.append(y, movie.rating)
         X = X[1:]
+        # THIS PART WILL BE DELETED
+        for case in test_cases:
+            X = np.append(X,[case],axis=0)
 
         labelencoder_X_year = LabelEncoder()
         X[:,0] = labelencoder_X_year.fit_transform(X[:,0])

@@ -1,0 +1,130 @@
+Currently using 382 movies for dataset:
+
+--Features--
+Number of Features: 4
+Number of Actors: 1828
+Number of Directors: 209
+Number of Writers: 269
+
+Testing Model Performance...
+
+Error Range = +1.0/-1.0
+
+
+Testing with KFCV
+
+Tree Number: 10
+Score: 71.9500674764
+Tree Number: 50
+Score: 71.673414305
+Tree Number: 100
+Score: 72.4561403509
+Tree Number: 200
+Score: 71.6801619433
+Tree Number: 400
+Score: 71.9365721997
+
+
+Evaluating with data separation
+
+Dividing data as %80 training data and %20 testing data
+
+Trees Number: 10
+Scores: 80.2631578947
+Trees Number: 50
+Scores: 80.2631578947
+Trees Number: 100
+Scores: 78.9473684211
+Trees Number: 200
+Scores: 80.2631578947
+Trees Number: 400
+Scores: 77.6315789474
+
+
+Applying User Tests...
+
+-Movie 1-
+
+Casting: 
+Johnny Depp
+Geoffrey Rush
+Orlando Bloom
+Keira Knightley
+Jack Davenport
+Jonathan Pryce
+Lee Arenberg
+Mackenzie Crook
+
+Genres:
+Action
+Adventure
+Fantasy
+
+Director: Gore Verbinski
+
+Writer: Ted Elliott
+
+Score: 7.628
+
+
+-Movie 2-
+
+Casting: 
+Hugh Jackman
+Jim Carrey
+Jackie Chan
+Orlando Bloom
+Vin Diesel
+Halle Berry
+
+Genres:
+Comedy
+Romance
+
+Director: Sam Mendes
+
+Writer: Neal Purvis
+
+Score: 6.74
+
+
+-Movie 3-
+
+Casting: 
+Hugh Jackman
+Jim Carrey
+Jackie Chan
+Orlando Bloom
+Vin Diesel
+Halle Berry
+
+Genres:
+Action
+Adventure
+
+Director: Sam Mendes
+
+Writer: Neal Purvis
+
+Score: 7.252
+
+
+-Movie 4-
+
+Casting: 
+Sylvester Stallone
+Jason Statham
+Jet Li
+Rihanna
+Victoria Bidewell
+
+Genres:
+Romance
+Family
+
+Director: Tim Burton
+
+Writer: Sylvester Stallone
+
+Score: 6.578
+

@@ -23,8 +23,8 @@ class RandomForest:
         return correct / float(len(actual)) * 100.0
 
     def construct_model(self):
-        self.regressor = RandomForestRegressor(n_estimators=tree_number, random_state = 0)
-        self.regressor.fit(X, y)
+        self.regressor = RandomForestRegressor(n_estimators=100, random_state = 0)
+        self.regressor.fit(self.X, self.y)
 
     def predict_score(self, data):
         return self.regressor.predict(data)
@@ -38,7 +38,7 @@ class RandomForest:
         dataset_divison_regressor_results = self.test_with_dataset_separation(X=features,y=results)
 
     def test_with_kfcv(self, train_set, train_set_values, n_folds=10, tree_numbers=[10,50,100,200,400]):
-        print('\nTesting with KFCV\n')
+        print('Testing with KFCV\n')
         results = []
 
         for tree_number in tree_numbers:
