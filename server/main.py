@@ -3,48 +3,42 @@ from random_forest import RandomForest
 from data_converter import DataConverter
 
 if __name__ == '__main__':
+    dl = DataLoader()
     # dl.populate_django_db(movie_limit=400, cast_limit=8, continue_from=0)
 
     data_converter = DataConverter()
     data=[]
-    m=[]
+
     casting=['Johnny Depp','Geoffrey Rush','Orlando Bloom','Keira Knightley','Jack Davenport',
     'Jonathan Pryce','Lee Arenberg','Mackenzie Crook']
     genres=['Action','Adventure','Fantasy']
     director='Gore Verbinski'
     writer='Ted Elliott'
     year=2003
-    m.append([casting,genres,director,writer,year])
-    data.append(data_converter.create_movie(casting,year,genres,writer,director))
+    data.append([casting,genres,director,writer,year])
 
     casting=['Hugh Jackman','Jim Carrey','Jackie Chan','Orlando Bloom','Vin Diesel','Halle Berry']
     genres=['Comedy','Romance']
     director='Sam Mendes'
     writer='Neal Purvis'
     year=2008
-    m.append([casting,genres,director,writer,year])
-    data.append(data_converter.create_movie(casting,year,genres,writer,director))
+    data.append([casting,genres,director,writer,year])
 
     casting=['Hugh Jackman','Jim Carrey','Jackie Chan','Orlando Bloom','Vin Diesel','Halle Berry']
     genres=['Action','Adventure']
     director='Sam Mendes'
     writer='Neal Purvis'
     year=2008
-    m.append([casting,genres,director,writer,year])
-    data.append(data_converter.create_movie(casting,year,genres,writer,director))
+    data.append([casting,genres,director,writer,year])
 
     casting=['Sylvester Stallone','Jason Statham','Jet Li','Rihanna','Victoria Bidewell']
     genres=['Romance','Family']
     director='Tim Burton'
     writer='Sylvester Stallone'
     year=2008
-    m.append([casting,genres,director,writer,year])
-    data.append(data_converter.create_movie(casting,year,genres,writer,director))
+    data.append([casting,genres,director,writer,year])
 
-    dl = DataLoader()
-    X,y = dl.load_dataset(test_cases=data)
-    test_cases = X[len(X)-len(data):]
-    X = X[:len(X)-len(data)]
+    X,y = dl.load_dataset()
     rf = RandomForest(X,y)
 
     # print('Testing Model Performance...\n')
@@ -54,17 +48,18 @@ if __name__ == '__main__':
     rf.construct_model()
 
     n=0
-    for test_case in test_cases:
-        score = rf.predict_score(test_case)
+    for test_case in data:
+        score = rf.predict_score(data_converter.create_movie(test_case))
         print('-Movie '+str(n+1)+'-')
         print('\nCasting: ')
-        for a in m[n][0]:
+        for a in test_case[0]:
             print(a)
         print('\nGenres:')
-        for a in m[n][1]:
+        for a in test_case[1]:
             print(a)
-        print('\nDirector: ' + m[n][2])
-        print('\nWriter: ' + m[n][3])
+        print('\nDirector: ' + test_case[2])
+        print('\nWriter: ' + test_case[3])
+        print('\nYear: ' + test_case[4])
         print('\nScore: ' + str(score[0]))
         print('\n')
         n = n + 1

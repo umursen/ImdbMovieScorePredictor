@@ -29,6 +29,13 @@ class Genre(models.Model):
         return self.name.encode('utf8')
 
 
+class Year(models.Model):
+    year = models.IntegerField(default=0,unique=True)
+
+    def __str__(self):
+        return self.year
+
+
 class Movie(models.Model):
     name = models.CharField(max_length=128)
     release_date = models.CharField(max_length=64)
@@ -40,7 +47,7 @@ class Movie(models.Model):
     writer = models.ForeignKey(Writer, related_name='writer', null=True, blank=True)
     director = models.ForeignKey(Director, related_name='director', null=True, blank=True)
     rating = models.FloatField(default=0)
-    year = models.IntegerField(default=0)
+    year = models.ForeignKey(Year, null=True, blank=True)
     genre = models.ManyToManyField(Genre, blank=True)
 
     def __str__(self):

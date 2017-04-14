@@ -50,7 +50,7 @@ class DataLoader:
 
                 movie.writer = Writer.objects.get_or_create(name = movie_info['writer'][0]['name'].encode('utf8'))[0]
                 movie.director = Director.objects.get_or_create(name = movie_info['director'][0]['name'].encode('utf8'))[0]
-                movie.year = movie_info['year']
+                movie.year = Year.objects.get_or_create(year = movie_info['year'])[0]
 
                 if 'rating' in movie_info.keys():
                     movie.rating = movie_info['rating']
@@ -78,8 +78,9 @@ class DataLoader:
         writer_amount = len(Writer.objects.all())
         director_amount = len(Director.objects.all())
         genre_amount = len(Genre.objects.all())
+        year_amount = len(Year.objects.all())
 
-        array_length = actor_amount + writer_amount + director_amount + genre_amount + 1
+        array_length = actor_amount + writer_amount + director_amount + genre_amount + year_amount
 
         X = np.empty([1,array_length], dtype=int)
         y = np.array([], dtype=float)
@@ -87,37 +88,32 @@ class DataLoader:
         movies = Movie.objects.all()
 
         print('\nCurrently using '+str(len(movies))+' movies for dataset\n')
-        print('--Features--\nNumber of Features: 4\nNumber of Actors: '+ str(actor_amount)+'\nNumber of Directors: '+ str(director_amount)+'\nNumber of Writers: '+ str(writer_amount)+'\n')
+        print('--Features--\nNumber of Features: 4\nNumber of Actors: '+ str(actor_amount)+'\nNumber of Directors: '+ str(director_amount)+'\nNumber of Writers: '+ str(writer_amount)+'\nNumber of Years: '+ str(year_amount)+'\n')
 
         for movie in movies:
             m = np.zeros(array_length, dtype=int)
 
-            m[0] = int(str(movie.release_date)[(len(movie.release_date)-4):])
-
-            actor_priority=1
-            actor_number = len(movie.casting.all())
             for actor in movie.casting.all():
-                m[actor.pk] = actor_priority
+                m[actor.pk-1] = 1
 
             for genre in movie.genre.all():
-                m[actor_amount+genre.pk] = 1
+                m[actor_amount+genre.pk-1] = 1
 
-            m[actor_amount+genre_amount+movie.writer.pk] = 1
-            m[actor_amount+genre_amount+writer_amount+movie.director.pk] = 1
+            m[actor_amount+genre_amount+movie.writer.pk-1] = 1
+            m[actor_amount+genre_amount+writer_amount+movie.director.pk-1] = 1
+            m[actor_amount+genre_amount+writer_amount+director_amount+movie.year.pk-1] = 1
 
             # m[len(m)-1]=movie.production_budget
 
             X = np.append(X, [m], axis=0)
             y = np.append(y, movie.rating)
         X = X[1:]
-        # THIS PART WILL BE DELETED
-        for case in test_cases:
-            X = np.append(X,[case],axis=0)
 
-        labelencoder_X_year = LabelEncoder()
-        X[:,0] = labelencoder_X_year.fit_transform(X[:,0])
-        oneHotEncoder = OneHotEncoder(categorical_features=[0])
-        X = oneHotEncoder.fit_transform(X).toarray()
+        # labelencoder_X_year = LabelEncoder()
+        # X[:,0] = labelencoder_X_year.fit_transform(X[:,0])
+        # oneHotEncoder = OneHotEncoder(categorical_features=[0])
+        # X = oneHotEncoder.fit_transform(X).toarray()
+
         # X = StandardScaler().transform(X)
 
         return X,y

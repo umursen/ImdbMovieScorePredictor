@@ -15,8 +15,9 @@ class DataConverter:
         self.writer_amount = len(Writer.objects.all())
         self.director_amount = len(Director.objects.all())
         self.genre_amount = len(Genre.objects.all())
-        self.array_length = self.actor_amount + self.writer_amount + self.director_amount + self.genre_amount + 1
-        print(self.array_length)
+        self.year_amount = len(Year.objects.all())
+        self.array_length = self.actor_amount + self.writer_amount + self.director_amount + self.genre_amount + self.year_amount
+
 
     def convert_casting(self,actors):
         actor_indexes = []
@@ -52,23 +53,30 @@ class DataConverter:
         else:
             print('Error')
 
-    def create_movie(self,casting,release_date,genres,writer,director):
-        casting = self.convert_casting(casting)
-        genres = self.convert_genres(genres)
-        writer = self.convert_writer(writer)
-        director = self.convert_director(director)
+    def convert_year(self,year):
+        year = Year.objects.get(year=year)
+        if year:
+            return year.pk
+        else:
+            print('Error')
+
+    def create_movie(self,movie):
+        casting = self.convert_casting(movie[0])
+        genres = self.convert_genres(movie[1])
+        director = self.convert_director(movie[2])
+        writer = self.convert_writer(movie[3])
+        year = self.convert_year(movie[4])
 
         X = np.zeros(self.array_length, dtype=int)
 
-        X[0] = release_date
-
         for actor_index in casting:
-            X[actor_index] = 1
+            X[actor_index-1] = 1
 
         for genre_index in genres:
-            X[self.actor_amount+genre_index] = 1
+            X[self.actor_amount+genre_index-1] = 1
 
-        X[self.actor_amount+self.genre_amount+writer] = 1
-        X[self.actor_amount+self.genre_amount+self.writer_amount+director] = 1
+        X[self.actor_amount+self.genre_amount+writer-1] = 1
+        X[self.actor_amount+self.genre_amount+self.writer_amount+director-1] = 1
+        X[self.actor_amount+self.genre_amount+self.writer_amount+self.director_amount+year-1] = 1
 
         return X
