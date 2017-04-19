@@ -39,14 +39,14 @@ if __name__ == '__main__':
     year=2008
     data.append([casting,genres,director,writer,year])
 
-    X,y = dl.load_dataset()
-    rf = RandomForest(X,y)
-
-    print('RANDOM FOREST: Testing Model Performance...\n')
-    rf.test_performance()
-
-    # print('Applying User Tests...\n')
-    # rf.construct_model()
+    # X,y = dl.load_dataset()
+    # rf = RandomForest(X,y)
+    #
+    # print('RANDOM FOREST: Testing Model Performance...\n')
+    # rf.test_performance()
+    #
+    # # print('Applying User Tests...\n')
+    # # rf.construct_model()
 
     X,y = dl.load_dataset()
     lr = LinearRegressor(X,y)

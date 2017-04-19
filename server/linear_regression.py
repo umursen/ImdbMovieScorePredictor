@@ -39,10 +39,11 @@ class LinearRegressor:
 
     def test_with_kfcv(self, train_set, train_set_values, n_folds=10, tree_numbers=[10,50,100,200,400]):
         print('Testing with KFCV\n')
-        results = []
 
         cv = cross_validation.KFold(len(train_set), n_folds=n_folds)
         regressor = LinearRegression()
+
+        scores = []
 
         for train_cv, test_cv in cv:
             probs = regressor.fit(train_set[train_cv], train_set_values[train_cv]).predict(train_set[test_cv])
