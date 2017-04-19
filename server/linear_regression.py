@@ -1,8 +1,8 @@
-from sklearn.ensemble import RandomForestRegressor
+from sklearn.linear_model import LinearRegression
 from sklearn import cross_validation
 import numpy as np
 
-class RandomForest:
+class LinearRegressor:
 
     def __init__(self,X,y):
         self.X = X
@@ -23,7 +23,7 @@ class RandomForest:
         return correct / float(len(actual)) * 100.0
 
     def construct_model(self):
-        self.regressor = RandomForestRegressor(n_estimators=100, random_state = 0)
+        self.regressor = LinearRegression()
         self.regressor.fit(self.X, self.y)
 
     def predict_score(self, data):
@@ -39,19 +39,16 @@ class RandomForest:
 
     def test_with_kfcv(self, train_set, train_set_values, n_folds=10, tree_numbers=[10,50,100,200,400]):
         print('Testing with KFCV\n')
+        results = []
 
-        for tree_number in tree_numbers:
-            cv = cross_validation.KFold(len(train_set), n_folds=n_folds)
-            regressor = RandomForestRegressor(n_estimators=tree_number, random_state = 0)
+        cv = cross_validation.KFold(len(train_set), n_folds=n_folds)
+        regressor = LinearRegression()
 
-            scores = []
+        for train_cv, test_cv in cv:
+            probs = regressor.fit(train_set[train_cv], train_set_values[train_cv]).predict(train_set[test_cv])
+            scores.append(self.accuracy_metric(probs, train_set_values))
 
-            for train_cv, test_cv in cv:
-                probs = regressor.fit(train_set[train_cv], train_set_values[train_cv]).predict(train_set[test_cv])
-                scores.append(self.accuracy_metric(probs, train_set_values))
-
-            print('Tree Number: %d' % tree_number)
-            print('Score: %s' % np.array(scores).mean())
+        print('Score: %s' % np.array(scores).mean())
 
 
     def test_with_dataset_separation(self, X, y, tree_numbers=[10,50,100,200,400]):
@@ -64,16 +61,14 @@ class RandomForest:
         error_range = 1.0
         print('Error Range = +' + str(error_range) + '/-'+ str(error_range) + '\n')
 
-        for tree_number in tree_numbers:
-            regressor = RandomForestRegressor(n_estimators=tree_number, random_state = 0, max_features='sqrt')
-            regressor.fit(train_set, train_set_real_values)
+        regressor = LinearRegression()
+        regressor.fit(train_set, train_set_real_values)
 
-            y_preds = []
+        y_preds = []
 
-            for n in range(test_set_length):
-                y_preds.append(regressor.predict([test_set[n]]))
+        for n in range(test_set_length):
+            y_preds.append(regressor.predict([test_set[n]]))
 
-            scores = self.accuracy_metric(y_preds, test_set_real_values, error_range=error_range)
+        scores = self.accuracy_metric(y_preds, test_set_real_values, error_range=error_range)
 
-            print('Trees Number: %d' % tree_number)
-            print('Scores: %s' % scores)
+        print('Scores: %s' % scores)
