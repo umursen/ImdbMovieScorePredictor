@@ -33,7 +33,7 @@ class Year(models.Model):
     year = models.IntegerField(default=0,unique=True)
 
     def __str__(self):
-        return self.year
+        return str(self.year)
 
 
 class Movie(models.Model):

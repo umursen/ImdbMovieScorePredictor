@@ -1,0 +1,11 @@
+
+<select class="js-example-basic-single-writer" style="width: 50%" name='writer'>
+  <option></option>
+  {% if writers %}
+    {% for w in writers %}
+      <option value={{w.id}}>{{w.name}}</option>
+    {% endfor %}
+  {% else %}
+    <h2> There are no writer present.</h2>
+  {% endif %}
+</select>

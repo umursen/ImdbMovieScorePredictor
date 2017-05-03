@@ -23,8 +23,9 @@ class RandomForest:
         return correct / float(len(actual)) * 100.0
 
     def construct_model(self):
-        self.regressor = RandomForestRegressor(n_estimators=100, random_state = 0)
+        self.regressor = RandomForestRegressor(n_estimators=200, random_state = 0)
         self.regressor.fit(self.X, self.y)
+        return self.regressor
 
     def predict_score(self, data):
         return self.regressor.predict(data)

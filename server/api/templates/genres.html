@@ -1,0 +1,15 @@
+
+{% block genres_content %}
+
+<select class="js-example-basic-multiple-genre" multiple="multiple"style="width: 50%" name='genres[]'>
+  <option></option>
+  {% if genres %}
+    {% for g in genres %}
+      <option value={{g.id}}>{{g.name}}</option>
+    {% endfor %}
+  {% else %}
+    <h2> There are no genre present.</h2>
+  {% endif %}
+</select>
+
+{% endblock %}

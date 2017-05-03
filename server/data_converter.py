@@ -60,12 +60,19 @@ class DataConverter:
         else:
             print('Error')
 
-    def create_movie(self,movie):
-        casting = self.convert_casting(movie[0])
-        genres = self.convert_genres(movie[1])
-        director = self.convert_director(movie[2])
-        writer = self.convert_writer(movie[3])
-        year = self.convert_year(movie[4])
+    def create_movie(self,movie,id_query=False):
+        if id_query:
+            casting = movie[0]
+            genres = movie[1]
+            director = movie[2]
+            writer = movie[3]
+            year = movie[4]
+        else:
+            casting = self.convert_casting(movie[0])
+            genres = self.convert_genres(movie[1])
+            director = self.convert_director(movie[2])
+            writer = self.convert_writer(movie[3])
+            year = self.convert_year(movie[4])
 
         X = np.zeros(self.array_length, dtype=int)
 

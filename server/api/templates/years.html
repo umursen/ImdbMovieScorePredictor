@@ -1,0 +1,11 @@
+
+<select class="js-example-basic-single-year" style="width: 50%" name='year'>
+  <option></option>
+  {% if years %}
+    {% for y in years %}
+      <option value={{y.id}}>{{y.year}}</option>
+    {% endfor %}
+  {% else %}
+    <h2> There are no year present.</h2>
+  {% endif %}
+</select>
