@@ -20,6 +20,58 @@ class DataLoader:
             data = json.load(data_file)
             return data
 
+    def save_ids(self):
+        actors = Actor.objects.all()
+        data = {}
+        for actor in actors:
+            data[actor._id] = ''
+        with open('actor_ids.json', 'w') as outfile:
+            json.dump(data, outfile)
+
+        writers = Writer.objects.all()
+        data = {}
+        for writer in writers:
+            data[writer._id] = ''
+        with open('writer_ids.json', 'w') as outfile:
+            json.dump(data, outfile)
+
+        directors = Director.objects.all()
+        data = {}
+        for director in directors:
+            data[director._id] = ''
+        with open('director_ids.json', 'w') as outfile:
+            json.dump(data, outfile)
+
+    def set_poster_urls(self):
+        with open('../ActorCrawler/actor_posters.json') as data_file:
+            data = json.load(data_file)
+            for poster_data in data:
+                poster_url = poster_data['poster']
+                user_id = poster_data['id']
+                person = Actor.objects.get(_id=int(user_id))
+                person.poster = poster_url
+                person.save()
+
+        with open('../ActorCrawler/director_posters.json') as data_file:
+            data = json.load(data_file)
+            for poster_data in data:
+                poster_url = poster_data['poster']
+                user_id = poster_data['id']
+                person = Director.objects.get(_id=int(user_id))
+                person.poster = poster_url
+                person.save()
+
+        with open('../ActorCrawler/writer_posters.json') as data_file:
+            data = json.load(data_file)
+            for poster_data in data:
+                poster_url = poster_data['poster']
+                user_id = poster_data['id']
+                actor = Writer.objects.get(_id=int(user_id))
+                actor.poster = poster_url
+                actor.save()
+
+        print('Poster urls are saved')
+
     def populate_django_db(self, movie_limit=1000, cast_limit=10, continue_from=0):
         ia = IMDb()
         data = self.read_json_file()
@@ -49,14 +101,20 @@ class DataLoader:
                 )
 
                 movie.writer = Writer.objects.get_or_create(name = movie_info['writer'][0]['name'].encode('utf8'))[0]
-                movie.director = Director.objects.get_or_create(name = movie_info['director'][0]['name'].encode('utf8'))[0]
+                movie.writer._id=int(movie_info['writer'][0].personID)
+                movie.writer.save()
+
+                movie.director = Director.objects.get_or_create(name = movie_info['director'][0]['name'].encode('utf8'), _id=int(movie_info['director'][0].personID))[0]
                 movie.year = Year.objects.get_or_create(year = movie_info['year'])[0]
 
                 if 'rating' in movie_info.keys():
                     movie.rating = movie_info['rating']
 
                 for n in range(cast_limit):
-                    movie.casting.add(Actor.objects.get_or_create(name=movie_info['cast'][n]['name'].encode('utf8'))[0])
+                    actor = Actor.objects.get_or_create(name=movie_info['cast'][n]['name'].encode('utf8'))[0]
+                    actor._id=int(movie_info['cast'][n].personID)
+                    actor.save()
+                    movie.casting.add(actor)
 
                 for genre in movie_info['genre']:
                     movie.genre.add(Genre.objects.get_or_create(name=genre.encode('utf8'))[0])

@@ -1,8 +1,8 @@
 
-<select class="js-example-basic-multiple-actor" multiple="multiple" style="width: 50%" name="actors[]" id="e1">
+<select class="js-example-basic-multiple-actor" multiple="multiple" style="width: 70%" name="actors[]" id="e1">
   {% if actors %}
     {% for a in actors %}
-      <option value={{a.id}}>{{a.name}}</option>
+      <option value='{"id":"{{a.id}}","poster":"{{a.poster}}","name":"{{a.name}}"}'>{{a.name}}</option>
     {% endfor %}
   {% else %}
     <h2> There are no actor present.</h2>

@@ -1,9 +1,9 @@
 
-<select class="js-example-basic-single-director" style="width: 50%" name='director'>
+<select class="js-example-basic-single-director" style="width: 70%" name='director'>
   <option></option>
   {% if directors %}
     {% for d in directors %}
-      <option value={{d.id}}>{{d.name}}</option>
+      <option value='{"id":"{{d.id}}","poster":"{{d.poster}}","name":"{{d.name}}"}'>{{d.name}}</option>
     {% endfor %}
   {% else %}
     <h2> There are no director present.</h2>

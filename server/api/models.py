@@ -3,6 +3,8 @@ from django.db import models
 
 class Actor(models.Model):
     name = models.CharField(max_length=64,unique=True)
+    _id = models.IntegerField(default=0)
+    poster = models.CharField(max_length=256, default='')
 
     def __str__(self):
         return self.name.encode('utf8')
@@ -10,6 +12,8 @@ class Actor(models.Model):
 
 class Writer(models.Model):
     name = models.CharField(max_length=64,unique=True)
+    _id = models.IntegerField(default=0)
+    poster = models.CharField(max_length=256, default='')
 
     def __str__(self):
         return self.name.encode('utf8')
@@ -17,6 +21,8 @@ class Writer(models.Model):
 
 class Director(models.Model):
     name = models.CharField(max_length=64,unique=True)
+    _id = models.IntegerField(default=0)
+    poster = models.CharField(max_length=256, default='')
 
     def __str__(self):
         return self.name.encode('utf8')

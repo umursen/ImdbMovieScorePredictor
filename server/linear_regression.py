@@ -25,6 +25,7 @@ class LinearRegressor:
     def construct_model(self):
         self.regressor = LinearRegression()
         self.regressor.fit(self.X, self.y)
+        return self.regressor
 
     def predict_score(self, data):
         return self.regressor.predict(data)
@@ -34,7 +35,7 @@ class LinearRegressor:
     def test_performance(self):
         features = self.X
         results = self.y
-        kfcv_regressor_results = self.test_with_kfcv(train_set=features,train_set_values=results)
+        # kfcv_regressor_results = self.test_with_kfcv(train_set=features,train_set_values=results)
         dataset_divison_regressor_results = self.test_with_dataset_separation(X=features,y=results)
 
     def test_with_kfcv(self, train_set, train_set_values, n_folds=10, tree_numbers=[10,50,100,200,400]):

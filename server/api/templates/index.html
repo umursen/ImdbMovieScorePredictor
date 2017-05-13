@@ -1,60 +1,160 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title></title>
-    {% load api_extras %}
-    {% load static %}
+<html lang="en">
 
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
-    <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <title></title>
+  {% load api_extras %}
+  {% load static %}
 
-    <link href="{% static "/select2/dist/css/select2.min.css" %}" rel="stylesheet" />
-    <script src="{% static "/select2/dist/js/select2.min.js" %}"></script>
+  <link href="{% static "/css/bootstrap.min.css" %}" rel="stylesheet">
+  <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
 
+  <link href="{% static "/css/master.css" %}" rel="stylesheet" />
+  <link href="{% static "/select2/dist/css/select2.min.css" %}" rel="stylesheet" />
+  <script src="{% static "/select2/dist/js/select2.min.js" %}"></script>
 
-    <script type="text/javascript">
-      $(document).ready(function() {
-        $(".js-example-basic-multiple-actor").select2({
-          placeholder: "Select an actor",
-          maximumSelectionLength: 8
-        });
-        $(".js-example-basic-single-year").select2({
-          placeholder: "Select a year"
-        });
-        $(".js-example-basic-multiple-genre").select2({
-          placeholder: "Select a genre",
-          maximumSelectionLength: 4
-        });
-        $(".js-example-basic-single-director").select2({
-          placeholder: "Select a director"
-        });
-        $(".js-example-basic-single-writer").select2({
-          placeholder: "Select a writer"
-        });
+  <script type="text/javascript">
+    function show_actor_image(src,name,id) {
+      if(src == '' || src.includes("ia.media-imdb.com")){
+        src = "{% static "/image/unknown-user.png"%}";
+      }
+      $("#actor_posters").append("<div class='col-sm-3' id="+id+" style='margin-left: 10px; margin-bottom: 10px;'><div class='card' style='width: 9rem;height: 16rem;'><img class='card-img-top' style='width: 100%; height: 75%;' src="+src+" alt='Card image cap'><div class='card-block' style='padding: 1rem;'><h5 class='card-title' style='text-align: center;'>"+name+"</h5></div></div></div>");
+    }
+
+    function show_director_image(src,name,id) {
+      if(src == '' || src.includes("ia.media-imdb.com")){
+        src = "{% static "/image/unknown-user.png"%}";
+      }
+      $("#director_posters").append("<div class='col-sm-3' id='director' style='margin-left: 10px; margin-bottom: 10px;'><div class='card' style='width: 9rem;height: 16rem;'><img class='card-img-top' style='width: 100%; height: 75%;' src="+src+" alt='Card image cap'><div class='card-block' style='padding: 1rem;'><h4 class='card-title' style='text-align: center;'>"+name+"</h4></div></div></div>");
+  }
+
+    function show_writer_image(src,name,id) {
+      if(src == '' || src.includes("ia.media-imdb.com")){
+        src = "{% static "/image/unknown-user.png"%}";
+      }
+      $("#writer_posters").append("<div class='col-sm-3' id='writer' style='margin-left: 10px; margin-bottom: 10px;'><div class='card' style='width: 9rem;height: 16rem;'><img class='card-img-top' style='width: 100%; height: 75%;' src="+src+" alt='Card image cap'><div class='card-block' style='padding: 1rem;'><h4 class='card-title' style='text-align: center;'>"+name+"</h4></div></div></div>");
+  }
+
+    $(document).ready(function() {
+      $(".js-example-basic-multiple-actor").select2({
+        placeholder: "Select an actor",
+        maximumSelectionLength: 8
+      }).on("select2:selecting", function(e){
+        console.log(e.params.args.data.id);
+        show_actor_image(JSON.parse(e.params.args.data.id)['poster'],JSON.parse(e.params.args.data.id)['name'],JSON.parse(e.params.args.data.id)['id']);
+      }).on("select2:unselect", function(e){
+        $(String('#'+String(JSON.parse(e.params.data.id)['id']))).remove();
       });
-    </script>
-  </head>
 
-  <body>
-    <div class="container">
-      <div class="header clearfix">
-        <h3 class="text-muted">IMDB Movie Score Predictor</h3>
-      </div>
-      <form action="/predict/" method="POST">{% csrf_token %}
-        <div class="row">{% list_actors%}</div>
-        <div class="row">{% list_genres%}</div>
-        <div class="row">{% list_directors%}</div>
-        <div class="row">{% list_writers%}</div>
-        <div class="row">{% list_years%}</div>
-        <input type="submit" value="Predict">
-      </form>
-      <p>Movie Score: {{score}}</p>
-    </div>
+      $(".js-example-basic-single-year").select2({
+        placeholder: "Select a year"
+      });
+      $(".js-example-basic-multiple-genre").select2({
+        placeholder: "Select a genre",
+        maximumSelectionLength: 4
+      });
+      $(".js-example-basic-single-director").select2({
+        placeholder: "Select a director"
+      }).on("select2:selecting", function(e){
+        $('#director').remove();
+        show_director_image(JSON.parse(e.params.args.data.id)['poster'],JSON.parse(e.params.args.data.id)['name']);
+      });
+      $(".js-example-basic-single-writer").select2({
+        placeholder: "Select a writer"
+      }).on("select2:selecting", function(e){
+        $('#writer').remove();
+        show_writer_image(JSON.parse(e.params.args.data.id)['poster'],JSON.parse(e.params.args.data.id)['name']);
+      });
+    });
+  </script>
+</head>
+<body>
+    <div class="container marketing">
 
-  </body>
+      <!-- Three columns of text below the carousel -->
+      <div class="row">
+        <div class="col-md-12">
+          <div class="header clearfix">
+            <h2 class="text-muted">IMDB Movie Score Predictor</h2><br>
+          </div>
+        </div>
+        <div class="col-md-12">
+          <form action="/predict/" method="POST">{% csrf_token %}
+            <h3>Actors</h3>
+            <div class="row">
+              <div class="col-md-6">
+              {% list_actors%}
+              </div>
+              <div class="col-md-6">
+                <div class="row" id="actor_posters">
+                </div>
+              </div>
+            </div>
+            <br>
+            <h3>Director</h3>
+            <div class="row">
+              <div class="col-md-6">
+                {% list_directors%}
+              </div>
+              <div class="col-md-6">
+                <div class="row" id="director_posters"> </div>
+              </div>
+            </div>
+            <br>
+            <h3>Writer</h3>
+            <div class="row">
+              <div class="col-md-6">
+                {% list_writers%}
+              </div>
+              <div class="col-md-6">
+                <div class="row" id="writer_posters"> </div>
+              </div>
+            </div>
+            <br>
+            <h3>Genres</h3>
+            <div class="row">
+              <div class="col-md-6">
+                {% list_genres%}
+              </div>
+              <div class="col-md-6">
+              </div>
+            </div>
+            <br>
+            <h3>Year</h3>
+            <div class="row">
+              <div class="col-md-6">
+                {% list_years%}
+              </div>
+              <div class="col-md-6">
+              </div>
+            </div>
+              <br>
+            <input type="submit" value="Predict"><br>
+          </form>
+
+          {% if percentage %}
+          <br>
+            <h3>Movie Score: {{score}}</h3>
+            <div id='stars'><span class="stars-container stars-{{percentage}}">★★★★★</span></div>
+          {% endif %}
+        </div>
+      </div><!-- /.row -->
+      <!-- START THE FEATURETTES -->
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
+    <script src="{% static "/js/bootstrap.min.js" %}"></script>
+    <!-- Just to make our placeholder images work. Don't actually copy the next line! -->
+    <script src="{% static "/js/holder.min.js" %}"></script>
+
+
+<svg xmlns="http://www.w3.org/2000/svg" width="500" height="500" viewBox="0 0 500 500" preserveAspectRatio="none" style="display: none; visibility: hidden; position: absolute; top: -100%; left: -100%;"><defs><style type="text/css"></style></defs><text x="0" y="25" style="font-weight:bold;font-size:25pt;font-family:Arial, Helvetica, Open Sans, sans-serif">500x500</text></svg></body>
+</body>
 </html>

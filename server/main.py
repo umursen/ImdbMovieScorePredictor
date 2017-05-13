@@ -6,16 +6,23 @@ import pickle
 
 if __name__ == '__main__':
 
-    var = raw_input("Choose a Job: \n1)Populate Database\n2)Test Random Forest\n3)Test Linear Regression\n4)User Tests\n5)Save Random Forest Model\n6)Save Linear Regression Model\n")
+    var = raw_input("Choose a Job: \n0)Populate Database\n1)Set Posters\n2)Test Random Forest\n3)Test Linear Regression\n4)User Tests\n5)Save Random Forest Model\n6)Save Linear Regression Model\n")
 
     dl = DataLoader()
 
-    if var is '1':
+    if var is '0':
         continue_from = raw_input('Continue from:')
         dl.populate_django_db(movie_limit=4000, cast_limit=6, continue_from=int(continue_from))
 
-    X,y = dl.load_dataset()
 
+    if var is '1':
+        var = raw_input('\n0)Save IDs \n1)Continue\n')
+        if var is '0':
+            dl.save_ids()
+        else:
+            dl.set_poster_urls()
+
+    X,y = dl.load_dataset()
 
     if var is '2':
         rf = RandomForest(X,y)
@@ -36,7 +43,8 @@ if __name__ == '__main__':
 
     if var is '6':
         print('LINEAR REGRESSION: Saving Model...\n')
-        model = LinearRegressor(X,y).construct_model()
+        lr = LinearRegressor(X,y)
+        model = lr.construct_model()
         filename = 'finalized_model.sav'
         pickle.dump(model, open(filename, 'wb'))
 
